@@ -74,7 +74,7 @@ export default {
     },
   },
 
-  created() {
+  mounted() {
     this.newComment = this.comment;
   },
 };

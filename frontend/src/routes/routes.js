@@ -43,7 +43,14 @@ const routes = [
     },
     {
         name: 'PostDeleted',
+        props: { message: 'The post has been deleted.' },
         path: '/post_deleted',
+        component: PostDeleted,
+    },
+    {
+        name: 'LoggedOut',
+        props: { message: 'You have logged out.' },
+        path: '/logged_out',
         component: PostDeleted,
     }
 ]

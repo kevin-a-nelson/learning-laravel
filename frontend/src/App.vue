@@ -1,20 +1,20 @@
 <template>
   <div>
-    <Header title="Dashboard" />
+    <Header title="Ramp Health Social" />
     <div class="spacing"></div>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-import Header from './components/Header.vue'
+import Header from "./components/Header.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    Header
+    Header,
   },
-}
+};
 </script>
 
 <style>

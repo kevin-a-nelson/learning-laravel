@@ -17,7 +17,7 @@
           <label for="exampleTextarea" class="form-label mt-4">Text</label>
           <textarea
             v-model="postText"
-            class="form-control"
+            class="post-form form-control"
             id="exampleTextarea"
             rows="3"
           ></textarea>
@@ -52,7 +52,7 @@ export default {
     };
   },
 
-  async created() {
+  async mounted() {
     if (this.mode === "edit") {
       await this.getPost();
     }
@@ -129,6 +129,10 @@ export default {
 .form-container {
   margin-top: 20px;
   margin-bottom: 15px;
+}
+
+.post-form {
+  height: 200px;
 }
 
 .submit-btn-container {

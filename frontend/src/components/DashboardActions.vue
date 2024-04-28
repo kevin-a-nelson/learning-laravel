@@ -1,12 +1,12 @@
 <template>
-  <div v-if="currentUser" class="post-actions create-post-btn-container">
+  <div v-if="currentUser?.id" class="post-actions create-post-btn-container">
     <router-link class="nav-link active" to="/create_post">
       <a href="#" class="card-link">Create Post</a>
     </router-link>
     &ensp;|&ensp;
     <a
       href="#"
-      @click="$emit('get:posts', { userId: currentUser.id })"
+      @click="$emit('get:posts', { userId: currentUser?.id })"
       class="card-link"
       >My Posts</a
     >

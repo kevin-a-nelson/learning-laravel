@@ -47,7 +47,6 @@ export default {
       postText: "",
       commentText: "",
       commentBeingEdited: -1,
-      currentUserId: -1,
       currentUser: {},
       postAuthorId: -1,
       postId: -1,
@@ -123,9 +122,12 @@ export default {
     },
   },
 
-  async created() {
-    // this.currentUserId = JSON.parse(localStorage["user"])?.id;
-    this.currentUser = JSON.parse(localStorage["user"]);
+  async mounted() {
+    try {
+      this.currentUser = JSON.parse(localStorage["user"]);
+    } catch {
+      this.currentUser = {};
+    }
 
     this.postId = this.$route.params.id;
 

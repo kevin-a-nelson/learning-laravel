@@ -28,8 +28,12 @@ export default {
       currentUser: {},
     };
   },
-  created() {
-    this.currentUser = JSON.parse(localStorage["user"]) || null;
+  mounted() {
+    try {
+      this.currentUser = JSON.parse(localStorage["user"]);
+    } catch {
+      this.currentUser = {};
+    }
     this.getPosts();
   },
   methods: {
