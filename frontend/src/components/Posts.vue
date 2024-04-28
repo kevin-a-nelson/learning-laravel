@@ -10,7 +10,10 @@
                 <a href="#" @click="getPosts" class="card-link">All Posts</a>
             </div>
             <div v-for="post in posts" :key="post.id" class="card border-primary mb-3">
-                <div class="card-header">{{ post.user.name }}</div>
+                <div class="flex card-header">
+                    <span> {{ post.user.name }}</span>
+                    <span> {{ post.created_at }} </span>
+                </div>
                 <div class="card-body">
                     <h4 class="card-title">{{ post.title }}</h4>
                     <p class="card-text">{{ post.text }}</p>
@@ -78,5 +81,10 @@ export default {
 .create-post-btn-container {
     /* margin-top: 10px; */
     margin-bottom: 20px;
+}
+
+.flex {
+    display: flex;
+    justify-content: space-between;
 }
 </style>

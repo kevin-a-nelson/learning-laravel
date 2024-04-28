@@ -25,7 +25,8 @@ class CommentController extends Controller
                     "text" => $comment->text,
                     "user" => User::where('id', $comment->userId)->first(),
                     "userId" => $comment->userId,
-                    "postId" => $comment->postId
+                    "postId" => $comment->postId,
+                    "created_at" => $comment->created_at->format('m/d/Y H:i A'),
                 ];
             })->toArray()
         );
@@ -54,7 +55,18 @@ class CommentController extends Controller
 
     public function update(Request $request, string $id)
     {
-        //
+        $comment = Comment::find($id);
+        $comment->update($request->all());
+
+        return response()->json([
+            "id" => $comment->id,
+            "text" => $comment->text,
+            "user" => User::where('id', $comment->userId)->first(),
+            "userId" => $comment->userId,
+            "postId" => $comment->postId,
+            "created_at" => $comment->created_at->format('m/d/Y H:i A'),
+        ]);
+
     }
 
     public function destroy(string $id)

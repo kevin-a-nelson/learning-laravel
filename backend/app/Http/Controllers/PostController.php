@@ -19,7 +19,8 @@ class PostController extends Controller
             "title" => $post->title,
             "text" => $post->text,
             "user" => User::where('id', $post->userId)->first(),
-            "userId" => $post->userId
+            "userId" => $post->userId,
+            "created_at" => $post->created_at->format("m/d/Y H:i A"),
         ]);
     }
 
@@ -54,7 +55,8 @@ class PostController extends Controller
                     "title" => $post->title,
                     "text" => $post->text,
                     "user" => User::where('id', $post->userId)->first(),
-                    "userId" => $post->userId
+                    "userId" => $post->userId,
+                    "created_at" => $post->created_at->format("m/d/Y H:i A"),
                 ];
             })->toArray()
         );
