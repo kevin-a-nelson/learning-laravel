@@ -111,7 +111,7 @@ export default {
           if (response.data.code === 200) {
             this.postText = "";
             this.postTitle = "";
-            router.push("/");
+            router.push(`/posts/${response.data.post.id}`);
           } else {
             this.createPostFailed = true;
           }

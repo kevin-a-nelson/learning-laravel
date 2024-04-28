@@ -25,29 +25,14 @@ export default {
   data() {
     return {
       posts: [],
-      isLoggedIn: false,
       currentUser: {},
     };
   },
   created() {
-    this.isLoggedIn = localStorage["user"];
-    this.currentUser = JSON.parse(localStorage["user"]);
+    this.currentUser = JSON.parse(localStorage["user"]) || null;
     this.getPosts();
   },
   methods: {
-    async getMyPosts() {
-      let userId = JSON.parse(localStorage["user"])?.id;
-      let url = `http://localhost:8000/api/posts?userId=${userId}`;
-      await axios
-        .get(url)
-        .then((response) => {
-          this.posts = response.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-
     async getPosts(params) {
       let url = "http://localhost:8000/api/posts";
       await axios
