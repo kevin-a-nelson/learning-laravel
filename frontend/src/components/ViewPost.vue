@@ -80,7 +80,7 @@ export default {
       this.getComments();
     },
     async deleteComment(comment) {
-      this.commentBeingEdited = {};
+      this.commentBeingEdited = -1;
       let url = `http://localhost:8000/api/comments/${comment.id}`;
 
       await axios

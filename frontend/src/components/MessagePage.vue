@@ -3,7 +3,7 @@
     <div class="bs-component">
       <div class="alert alert-dismissible alert-danger">
         <!-- <button type="button" class="btn-close" data-bs-dismiss="alert"></button> -->
-        {{ message }}.
+        {{ message }}
       </div>
       <router-link class="nav-link active" to="/">
         <a href="#" class="card-link">Go Home</a>
@@ -14,7 +14,7 @@
 
 <script>
 export default {
-  name: "PostDeleted",
+  name: "MessagePage",
   props: {
     message: String,
   },

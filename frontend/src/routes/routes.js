@@ -4,7 +4,7 @@ import Login from '../components/Login';
 import Register from '../components/Register';
 import CreatePost from '../components/CreatePost';
 import ViewPost from '../components/ViewPost';
-import PostDeleted from '../components/PostDeleted';
+import MessagePage from '../components/MessagePage';
 import { createRouter, createWebHistory } from 'vue-router'
 
 
@@ -42,16 +42,16 @@ const routes = [
         component: ViewPost,
     },
     {
-        name: 'PostDeleted',
-        props: { message: 'The post has been deleted.' },
+        name: 'MessagePage',
+        props: { message: 'The post is now deleted.' },
         path: '/post_deleted',
-        component: PostDeleted,
+        component: MessagePage,
     },
     {
         name: 'LoggedOut',
-        props: { message: 'You have logged out.' },
+        props: { message: 'You are now logged out.' },
         path: '/logged_out',
-        component: PostDeleted,
+        component: MessagePage,
     }
 ]
 
