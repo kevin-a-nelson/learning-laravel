@@ -25,19 +25,9 @@
           </div>
         </div>
       </div>
-      <div>
-        <label for="exampleTextarea" class="form-label mt-4">Comments</label>
-        <textarea
-          class="form-control"
-          v-model="commentText"
-          id="exampleTextarea"
-          rows="3"
-          spellcheck="false"
-        ></textarea>
-      </div>
-      <div class="submit-btn-container">
-        <button @click="createComment" class="btn btn-primary">Submit</button>
-      </div>
+
+      <NewCommentForm @create:comment="createComment" />
+
       <div v-for="comment in comments" :key="comment.id">
         <Comment
           :comment="comment"
@@ -56,13 +46,14 @@
 import axios from "axios";
 
 import Comment from "../components/Comment.vue";
-// import { routeLocationKey } from 'vue-router';
+import NewCommentForm from "../components/NewCommentForm.vue";
 
 export default {
   name: "ViewPost",
 
   components: {
     Comment,
+    NewCommentForm,
   },
 
   data() {
@@ -130,11 +121,11 @@ export default {
         .catch(() => {});
     },
 
-    async createComment() {
+    async createComment(commentText) {
       let url = `http://localhost:8000/api/comments`;
       let userId = JSON.parse(localStorage["user"])?.id;
       let comment = {
-        text: this.commentText,
+        text: commentText,
         userId: userId,
         postId: this.$route.params.id,
       };
