@@ -29,7 +29,7 @@
       <div v-else>
         <p class="card-text">{{ comment.text }}</p>
 
-        <div class="post-actions" v-if="currentUserId === comment.userId">
+        <div class="post-actions" v-if="currentUser?.id === comment.userId">
           <a
             href="#"
             @click="() => $emit('update:commentBeingEdited', comment)"
@@ -55,7 +55,7 @@ export default {
   props: {
     comment: Object,
     commentBeingEdited: Number,
-    currentUserId: Number,
+    currentUser: Object,
   },
   data() {
     return {

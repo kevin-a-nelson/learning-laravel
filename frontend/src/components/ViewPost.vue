@@ -1,13 +1,19 @@
 <template>
   <div class="posts-container">
     <div class="container col-lg-6">
-      <Post :post="post" :currentUserId="currentUserId" />
+      <Post
+        :post="post"
+        :currentUser="currentUser"
+        :showView="false"
+        :showDelete="true"
+        :showEdit="true"
+      />
       <NewCommentForm @create:comment="createComment" />
       <div v-for="comment in comments" :key="comment.id">
         <Comment
           :comment="comment"
           :commentBeingEdited="commentBeingEdited"
-          :currentUserId="currentUserId"
+          :currentUser="currentUser"
           @update:commentBeingEdited="updateCommentBeingEdited"
           @update:comment="updateComment"
           @delete:comment="deleteComment"
@@ -42,6 +48,7 @@ export default {
       commentText: "",
       commentBeingEdited: -1,
       currentUserId: -1,
+      currentUser: {},
       postAuthorId: -1,
       postId: -1,
       newCommentText: "",
@@ -51,7 +58,6 @@ export default {
 
   methods: {
     async updateComment(comment) {
-      console.log(comment);
       let url = `http://localhost:8000/api/comments/${comment.id}`;
 
       await axios
@@ -118,7 +124,8 @@ export default {
   },
 
   async created() {
-    this.currentUserId = JSON.parse(localStorage["user"])?.id;
+    // this.currentUserId = JSON.parse(localStorage["user"])?.id;
+    this.currentUser = JSON.parse(localStorage["user"]);
 
     this.postId = this.$route.params.id;
 

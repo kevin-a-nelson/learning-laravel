@@ -7,33 +7,43 @@
     <div class="card-body">
       <h4 class="card-title">{{ post?.title }}</h4>
       <p class="card-text">{{ post?.text }}</p>
-      <div class="post-actions" v-if="currentUserId === post?.user?.id">
-        <router-link class="nav-link active" :to="editLink">
-          <a href="#" class="card-link">Edit</a>
-        </router-link>
-        <span>&ensp;|&ensp;</span>
-        <router-link
-          class="nav-link active"
-          @click="deletePost"
-          to="/post_deleted"
-        >
-          <a href="#" class="card-link">Delete</a>
-        </router-link>
-      </div>
+      <a href="#" v-if="showView" @click="goToView" class="card-link">View</a>
+      <span v-if="showView && showEdit && post?.user?.id === currentUser?.id"
+        >&ensp;|&ensp;</span
+      >
+      <a
+        href="#"
+        v-if="showEdit && post?.user?.id === currentUser?.id"
+        @click="goToEdit"
+        class="card-link"
+        >Edit</a
+      >
+      <span
+        v-if="
+          showEdit &&
+          post?.user?.id === currentUser?.id &&
+          showDelete &&
+          post?.user?.id === currentUser?.id
+        "
+        >&ensp;|&ensp;</span
+      >
+      <a
+        href="#"
+        v-if="showDelete && post?.user?.id === currentUser?.id"
+        @click="deletePost"
+        class="card-link"
+        >Delete</a
+      >
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import router from "../routes/routes.js";
 
 export default {
   name: "Post",
-  data() {
-    return {
-      editLink: "",
-    };
-  },
   methods: {
     async deletePost() {
       let url = `http://localhost:8000/api/posts/${this.$route.params.id}`;
@@ -41,14 +51,21 @@ export default {
         .delete(url)
         .then(() => {})
         .catch(() => {});
+      router.push(`/post_deleted`);
     },
-  },
-  created() {
-    this.editLink = `/edit_post/${this.$route.params.id}`;
+    goToEdit() {
+      router.push(`/edit_post/${this.post.id}`);
+    },
+    goToView() {
+      router.push(`/posts/${this.post.id}`);
+    },
   },
   props: {
     post: Object,
-    currentUserId: Number,
+    currentUser: Object,
+    showView: Boolean,
+    showEdit: Boolean,
+    showDelete: Boolean,
   },
 };
 </script>
