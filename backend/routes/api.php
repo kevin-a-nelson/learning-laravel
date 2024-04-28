@@ -12,4 +12,10 @@ Route::get('posts', [App\Http\Controllers\PostController::class, 'index']);
 Route::get('posts/{id}', [App\Http\Controllers\PostController::class, 'show']);
 Route::post('posts', [App\Http\Controllers\PostController::class, 'create']);
 Route::post('posts/{id}', [App\Http\Controllers\PostController::class, 'update']);
-Route::delete('posts/{id}', [App\Http\Controllers\PostController::class, 'delete']);
+Route::delete('posts/{id}', [App\Http\Controllers\PostController::class, 'destroy']);
+
+Route::get('comments', [App\Http\Controllers\CommentController::class, 'index']);
+Route::get('comments/{id}', [App\Http\Controllers\CommentController::class, 'show']);
+Route::post('comments', [App\Http\Controllers\CommentController::class, 'create']);
+Route::post('comments/{id}', [App\Http\Controllers\CommentController::class, 'update']);
+Route::delete('comments/{id}', [App\Http\Controllers\CommentController::class, 'destroy']);
