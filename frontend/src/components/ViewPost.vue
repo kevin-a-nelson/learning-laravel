@@ -1,33 +1,8 @@
 <template>
   <div class="posts-container">
     <div class="container col-lg-6">
-      <div class="card border-primary mb-3">
-        <!-- <div class="card-header">{{ postAuthor }}</div> -->
-        <div class="flex card-header">
-          <span> {{ post?.user?.name }}</span>
-          <span> {{ post.created_at }} </span>
-        </div>
-        <div class="card-body">
-          <h4 class="card-title">{{ post.title }}</h4>
-          <p class="card-text">{{ post.text }}</p>
-          <div class="post-actions" v-if="currentUserId === post?.user?.id">
-            <router-link class="nav-link active" :to="editLink">
-              <a href="#" class="card-link">Edit</a>
-            </router-link>
-            <span>&ensp;|&ensp;</span>
-            <router-link
-              class="nav-link active"
-              @click="deletePost"
-              to="/post_deleted"
-            >
-              <a href="#" class="card-link">Delete</a>
-            </router-link>
-          </div>
-        </div>
-      </div>
-
+      <Post :post="post" :currentUserId="currentUserId" />
       <NewCommentForm @create:comment="createComment" />
-
       <div v-for="comment in comments" :key="comment.id">
         <Comment
           :comment="comment"
@@ -47,6 +22,7 @@ import axios from "axios";
 
 import Comment from "../components/Comment.vue";
 import NewCommentForm from "../components/NewCommentForm.vue";
+import Post from "../components/Post.vue";
 
 export default {
   name: "ViewPost",
@@ -54,6 +30,7 @@ export default {
   components: {
     Comment,
     NewCommentForm,
+    Post,
   },
 
   data() {
@@ -64,7 +41,6 @@ export default {
       postText: "",
       commentText: "",
       commentBeingEdited: -1,
-      editLink: "",
       currentUserId: -1,
       postAuthorId: -1,
       postId: -1,
@@ -139,14 +115,6 @@ export default {
 
       await this.getComments();
     },
-
-    async deletePost() {
-      let url = `http://localhost:8000/api/posts/${this.$route.params.id}`;
-      await axios
-        .delete(url)
-        .then(() => {})
-        .catch(() => {});
-    },
   },
 
   async created() {
@@ -155,8 +123,6 @@ export default {
     this.postId = this.$route.params.id;
 
     let url = `http://localhost:8000/api/posts/${this.postId}`;
-
-    this.editLink = `/edit_post/${this.$route.params.id}`;
 
     await this.getComments();
 
