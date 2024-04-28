@@ -8,9 +8,15 @@ use App\Models\Comment;
 
 class CommentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $comments = Comment::orderByDesc('created_at')->get();
+
+        $postIdQuery = $request->query('postId');
+
+        if ($postIdQuery) {
+            $comments = $comments->where('postId', $postIdQuery);
+        }
 
         return response()->json(
             $comments->map(function ($comment) {
@@ -18,7 +24,8 @@ class CommentController extends Controller
                     "id" => $comment->id,
                     "text" => $comment->text,
                     "user" => User::where('id', $comment->userId)->first(),
-                    "userId" => $comment->userId
+                    "userId" => $comment->userId,
+                    "postId" => $comment->postId
                 ];
             })->toArray()
         );
@@ -29,6 +36,7 @@ class CommentController extends Controller
         $comment = new Comment();
         $comment->text = $request->text;
         $comment->userId = $request->userId;
+        $comment->postId = $request->postId;
         $comment->save();
 
         return $comment;
@@ -51,6 +59,7 @@ class CommentController extends Controller
 
     public function destroy(string $id)
     {
-        //
+        $comment = Comment::find($id);
+        $comment->delete();
     }
 }

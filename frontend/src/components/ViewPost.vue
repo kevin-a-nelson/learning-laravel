@@ -7,11 +7,20 @@
                     <h4 class="card-title">{{ postTitle }}</h4>
                     <p class="card-text">{{ postText }}</p>
                     <div class="post-actions" v-if="currentUserId === postAuthorId">
-                        <router-link class="nav-link active" :to="editLink"> <a href="#" class="card-link">Edit</a> </router-link>
+                        <router-link class="nav-link active" :to="editLink"> <a href="#" class="card-link">Edit</a>
+                        </router-link>
                         <span>&ensp;|&ensp;</span>
-                        <router-link class="nav-link active" @click="deletePost" to="/post_deleted"> <a href="#" class="card-link">Delete</a> </router-link>
+                        <router-link class="nav-link active" @click="deletePost" to="/post_deleted"> <a href="#"
+                                class="card-link">Delete</a> </router-link>
                     </div>
                 </div>
+            </div>
+            <div>
+                <label for="exampleTextarea" class="form-label mt-4">Comments</label>
+                <textarea class="form-control" id="exampleTextarea" rows="3" spellcheck="false"></textarea>
+            </div>
+            <div class="submit-btn-container">
+                <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </div>
     </div>
@@ -40,10 +49,10 @@ export default {
         async deletePost() {
             let url = `http://localhost:8000/api/posts/${this.$route.params.id}`
             await axios.delete(url)
-            .then(() => {
-            }).catch(() => {
+                .then(() => {
+                }).catch(() => {
 
-            })
+                })
         }
     },
 
@@ -54,7 +63,7 @@ export default {
         let url = `http://localhost:8000/api/posts/${this.$route.params.id}`
 
         this.editLink = `/edit_post/${this.$route.params.id}`
-        
+
         await axios.get(url).then(response => {
             this.postAuthorId = response?.data?.user?.id
             this.postAuthor = response?.data?.user?.name
