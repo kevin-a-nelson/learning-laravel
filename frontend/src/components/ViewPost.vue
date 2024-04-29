@@ -8,7 +8,7 @@
         :showDelete="true"
         :showEdit="true"
       />
-      <NewCommentForm @create:comment="createComment" />
+      <NewCommentForm v-if="currentUser?.id" @create:comment="createComment" />
       <div v-for="comment in comments" :key="comment.id">
         <Comment
           :comment="comment"

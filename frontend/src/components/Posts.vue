@@ -1,10 +1,19 @@
 <template>
   <div class="posts-container">
     <div class="container col-lg-6">
-      <DashboardActions :currentUser="currentUser" @get:posts="getPosts" />
+      <DashboardActions
+        v-if="currentUser?.id"
+        :currentUser="currentUser"
+        @get:posts="getPosts"
+      />
 
-      <div v-for="post in posts" :key="post.id">
-        <Post :post="post" :currentUser="currentUser" :showView="true" />
+      <div v-if="posts?.length > 0">
+        <div v-for="post in posts" :key="post.id">
+          <Post :post="post" :currentUser="currentUser" :showView="true" />
+        </div>
+      </div>
+      <div v-else>
+        <h6>You have no posts!</h6>
       </div>
     </div>
   </div>
@@ -67,6 +76,11 @@ export default {
 .create-post-btn-container {
   /* margin-top: 10px; */
   margin-bottom: 20px;
+}
+
+.no-posts-container {
+  /* margin-top: 40px; */
+  /* text-align: center; */
 }
 
 .flex {

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="currentUser?.id" class="post-actions create-post-btn-container">
+  <div class="post-actions create-post-btn-container">
     <router-link class="nav-link active" to="/create_post">
       <a href="#" class="card-link">Create Post</a>
     </router-link>
