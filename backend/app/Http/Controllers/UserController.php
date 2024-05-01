@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+    public function index(Request $request)
+    {
+        $items = User::all();
+        return response()->json($items);
+    }
+    // accepted: false,
+
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FriendRequest;
 use Illuminate\Http\Request;
+use DB;
 
 class FriendRequestController extends Controller
 {
@@ -21,6 +22,19 @@ class FriendRequestController extends Controller
 
     public function store(Request $request)
     {
+        // $duplicateFriendRequest = FriendRequest::where("senderId", $request->sender_id, "recipientId", $request->recipientId)->get();
+
+        $duplicateFriendRequest = DB::table('friend_requests')
+            ->where("senderId", $request->senderId)
+            ->where("recipientId", $request->recipientId)
+            ->get();
+
+        if (!$duplicateFriendRequest->isEmpty()) {
+            return response()->json([
+                "message" => "Duplicate Friend Request",
+            ], 404);
+        }
+
         $item = FriendRequest::create($request->all());
         return response()->json($item, 201);
     }

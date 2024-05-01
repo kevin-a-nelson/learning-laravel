@@ -6,8 +6,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('contacts', [App\Http\Controllers\ContactController::class, 'contacts']);
 Route::post('save_contact', [App\Http\Controllers\ContactController::class, 'saveContact']);
+
 Route::get('login', [App\Http\Controllers\UserController::class, 'login']);
 Route::post('user', [App\Http\Controllers\UserController::class, 'create']);
+Route::get('users', [App\Http\Controllers\UserController::class, 'index']);
 
 Route::get('posts', [App\Http\Controllers\PostController::class, 'index']);
 Route::get('posts/{id}', [App\Http\Controllers\PostController::class, 'show']);
