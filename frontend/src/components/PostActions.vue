@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: "DashboardActions",
+  name: "PostActions",
 
   props: {
     isLoggedIn: Boolean,

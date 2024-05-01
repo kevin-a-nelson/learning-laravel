@@ -6,6 +6,7 @@ import CreatePost from '../components/CreatePost';
 import ViewPost from '../components/ViewPost';
 import MessagePage from '../components/MessagePage';
 import { createRouter, createWebHistory } from 'vue-router'
+import FriendsPage from "@/components/FriendsPage.vue";
 
 
 const routes = [
@@ -23,6 +24,11 @@ const routes = [
         name: 'Register',
         path: '/register',
         component: Register
+    },
+    {
+        name: 'Register',
+        path: '/friends',
+        component: FriendsPage
     },
     {
         name: 'CreatePost',

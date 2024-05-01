@@ -1,7 +1,7 @@
 <template>
   <div class="posts-container">
     <div class="container col-lg-6">
-      <DashboardActions
+      <PostActions
         v-if="currentUser?.id"
         :currentUser="currentUser"
         @get:posts="getPosts"
@@ -23,13 +23,13 @@
 import axios from "axios";
 import router from "../routes/routes.js";
 import Post from "../components/Post.vue";
-import DashboardActions from "../components/DashboardActions.vue";
+import PostActions from "../components/PostActions.vue";
 
 export default {
   name: "Posts",
   components: {
     Post,
-    DashboardActions,
+    PostActions,
   },
   data() {
     return {
