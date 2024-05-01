@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FriendRequestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,3 +20,9 @@ Route::get('comments/{id}', [App\Http\Controllers\CommentController::class, 'sho
 Route::post('comments', [App\Http\Controllers\CommentController::class, 'create']);
 Route::post('comments/{id}', [App\Http\Controllers\CommentController::class, 'update']);
 Route::delete('comments/{id}', [App\Http\Controllers\CommentController::class, 'destroy']);
+
+Route::get('/friendRequests', [FriendRequestController::class, 'index']);
+Route::get('/friendRequests/{id}', [FriendRequestController::class, 'show']);
+Route::post('/friendRequests', [FriendRequestController::class, 'store']);
+Route::put('/friendRequests/{id}', [FriendRequestController::class, 'update']);
+Route::delete('/friendRequests/{id}', [FriendRequestController::class, 'destroy']);
