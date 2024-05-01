@@ -26,7 +26,7 @@ const routes = [
         component: Register
     },
     {
-        name: 'Register',
+        name: 'FriendsPage',
         path: '/friends',
         component: FriendsPage
     },
