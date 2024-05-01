@@ -1,7 +1,7 @@
 <template>
   <div class="container col-lg-6">
     <div class="post-actions create-post-btn-container">
-      <a href="#" class="card-link">My Friends</a>
+      <a href="#" @click="() => setCurrentTab(MY_FRIENDS_TAB)" class="card-link">My Friends</a>
       &ensp;|&ensp;
       <a
         href="#"
@@ -100,8 +100,15 @@ export default {
     },
   },
   methods: {
+    async getFriendships() {
+      // axios 
+    },
     async setCurrentTab(tab) {
       this.currentTab = tab;
+
+      if (tab === this.MY_FRIENDS_TAB) {
+        await this.getFriendships();
+      }
 
       if (tab === this.ADD_FRIENDS_TAB) {
         await this.GetUsers();
