@@ -37,7 +37,11 @@
       </div>
     </div>
     <div v-if="currentTab === ADD_FRIENDS_TAB">
-      <div v-for="user in users" v-bind:key="user.id" class="card">
+      <div
+        v-for="user in usersExceptCurrentUser"
+        v-bind:key="user.id"
+        class="card"
+      >
         <div class="card-body">
           <h5 class="card-title">{{ user.name }}</h5>
           <h6 class="card-subtitle mb-2 text-muted">{{ user.email }}</h6>
@@ -111,6 +115,11 @@ export default {
     await this.getFriendships();
   },
   computed: {
+    usersExceptCurrentUser() {
+      return this.users.filter((user) => {
+        return user.id !== this.currentUser.id;
+      });
+    },
     formattedFriendships() {
       return this.friendships.map((f) => {
         return {
