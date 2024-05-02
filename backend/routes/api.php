@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\FriendRequestController;
+use App\Http\Controllers\FriendshipController;
+use App\Models\Friendship;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,3 +30,9 @@ Route::get('/friendRequests/{id}', [FriendRequestController::class, 'show']);
 Route::post('/friendRequests', [FriendRequestController::class, 'store']);
 Route::put('/friendRequests/{id}', [FriendRequestController::class, 'update']);
 Route::delete('/friendRequests/{id}', [FriendRequestController::class, 'destroy']);
+
+Route::get('/friendships', [FriendshipController::class, 'index']);
+Route::get('/friendships/{id}', [FriendshipController::class, 'show']);
+Route::post('/friendships', [FriendshipController::class, 'store']);
+Route::put('/friendships/{id}', [FriendshipController::class, 'update']);
+Route::delete('/friendships/{id}', [FriendshipController::class, 'destroy']);

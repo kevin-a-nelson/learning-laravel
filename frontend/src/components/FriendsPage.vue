@@ -1,7 +1,9 @@
 <template>
   <div class="container col-lg-6">
     <div class="post-actions create-post-btn-container">
-      <a href="#" @click="() => setCurrentTab(MY_FRIENDS_TAB)" class="card-link">My Friends</a>
+      <a href="#" @click="() => setCurrentTab(MY_FRIENDS_TAB)" class="card-link"
+        >My Friends</a
+      >
       &ensp;|&ensp;
       <a
         href="#"
@@ -14,6 +16,26 @@
         >Friend Requests</a
       >
     </div>
+    <div v-if="currentTab === MY_FRIENDS_TAB">
+      <div v-if="formattedFriendships.length === 0">
+        <p>You have no friends</p>
+      </div>
+      <div
+        v-for="friend in formattedFriendships"
+        v-bind:key="friend.id"
+        class="card"
+      >
+        <div class="card-body">
+          <h5 class="card-title">{{ friend.user.name }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">
+            {{ friend.user.email }}
+          </h6>
+          <div>
+            <a href="#" @click="() => deleteFriendship(friend)">Unfriend</a>
+          </div>
+        </div>
+      </div>
+    </div>
     <div v-if="currentTab === ADD_FRIENDS_TAB">
       <div v-for="user in users" v-bind:key="user.id" class="card">
         <div class="card-body">
@@ -22,6 +44,7 @@
           <div v-if="friendRequestSentToUser(user)">
             Friend request pending...
           </div>
+          <div v-else-if="userIsFriend(user)">Already a Friend</div>
           <div v-else>
             <a
               href="#"
@@ -47,11 +70,9 @@
           <h6 class="card-subtitle mb-2 text-muted">
             {{ friendRequest.senderUser.email }}
           </h6>
-          <!-- <div v-if="friendRequestSentToUser(user)">
-            Friend request pending...
-          </div> -->
           <div>
-            <a href="#">Add</a>&ensp;|&ensp;<a
+            <a href="#" @click="() => createFriendShip(friendRequest)">Add</a
+            >&ensp;|&ensp;<a
               href="#"
               @click="() => deleteFriendRequest(friendRequest)"
               >Delete</a
@@ -77,17 +98,27 @@ export default {
       users: [],
       currentUser: {},
       friendRequests: [],
+      friendships: [],
     };
   },
 
-  mounted() {
+  async mounted() {
     try {
       this.currentUser = JSON.parse(localStorage["user"]);
     } catch {
       this.currentUser = {};
     }
+    await this.getFriendships();
   },
   computed: {
+    formattedFriendships() {
+      return this.friendships.map((f) => {
+        return {
+          id: f.id,
+          user: f.userOneId === this.currentUser.id ? f.userTwo : f.userOne,
+        };
+      });
+    },
     incommingFriendRequests() {
       return this.friendRequests.filter((friendRequest) => {
         return friendRequest.recipientId == this.currentUser?.id;
@@ -100,8 +131,43 @@ export default {
     },
   },
   methods: {
+    userIsFriend(user) {
+      return this.formattedFriendships.some((friend) => {
+        return friend.user.id === user.id;
+      });
+    },
+    async deleteFriendship(friend) {
+      await axios
+        .delete(`http://localhost:8000/api/friendships/${friend.id}`)
+        .then(() => {})
+        .catch(() => {});
+      await this.getFriendships();
+    },
+    async createFriendShip(friendRequest) {
+      let newFriendship = {
+        userOneId: friendRequest.recipientId,
+        userTwoId: friendRequest.senderId,
+      };
+      await axios
+        .post("http://localhost:8000/api/friendships", newFriendship)
+        .then(() => {})
+        .catch(() => {});
+
+      await axios
+        .delete(`http://localhost:8000/api/friendRequests/${friendRequest.id}`)
+        .then(() => {})
+        .catch(() => {});
+
+      await this.getFriendRequests();
+    },
     async getFriendships() {
-      // axios 
+      let params = { userId: this.currentUser.id };
+      await axios
+        .get(`http://localhost:8000/api/friendships`, { params })
+        .then((response) => {
+          this.friendships = response.data;
+        })
+        .catch(() => {});
     },
     async setCurrentTab(tab) {
       this.currentTab = tab;
@@ -147,8 +213,8 @@ export default {
         .catch(() => {});
 
       await this.getFriendRequests();
+      await this.getFriendships();
     },
-
     async getFriendRequests() {
       let params = { userId: this.currentUser.id };
       await axios
