@@ -30,7 +30,8 @@
           <h6 class="card-subtitle mb-2 text-muted">
             {{ friend.user.email }}
           </h6>
-          <div>
+          <div class="friend-action-buttons">
+            <a href="#" @click="() => setCurrentTab(CHAT_BOX)">Chat</a>
             <a href="#" @click="() => deleteFriendship(friend)">Unfriend</a>
           </div>
         </div>
@@ -74,17 +75,16 @@
           <h6 class="card-subtitle mb-2 text-muted">
             {{ friendRequest.senderUser.email }}
           </h6>
-          <div>
-            <a href="#" @click="() => createFriendShip(friendRequest)">Add</a
-            >&ensp;|&ensp;<a
-              href="#"
-              @click="() => deleteFriendRequest(friendRequest)"
+          <div class="friendrequest-action-buttons">
+            <a href="#" @click="() => createFriendShip(friendRequest)">Add</a>
+            <a href="#" @click="() => deleteFriendRequest(friendRequest)"
               >Delete</a
             >
           </div>
         </div>
       </div>
     </div>
+    <div v-if="currentTab === CHAT_BOX">Chat box</div>
   </div>
 </template>
 
@@ -98,6 +98,7 @@ export default {
       MY_FRIENDS_TAB: 0,
       ADD_FRIENDS_TAB: 1,
       FRIEND_REQUESTS_TAB: 2,
+      CHAT_BOX: 3,
       currentTab: 0,
       users: [],
       currentUser: {},
@@ -246,4 +247,14 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.friend-action-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.friendrequest-action-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+</style>
