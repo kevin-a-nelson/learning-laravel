@@ -23,7 +23,7 @@
       <div
         v-for="friendship in formattedFriendships"
         v-bind:key="friendship.id"
-        class="card"
+        class="card friend-page-card"
       >
         <div class="card-body">
           <h5 class="card-title">{{ friendship.user.name }}</h5>
@@ -41,7 +41,7 @@
       <div
         v-for="user in usersExceptCurrentUser"
         v-bind:key="user.id"
-        class="card"
+        class="card friend-page-card"
       >
         <div class="card-body">
           <h5 class="card-title">{{ user.name }}</h5>
@@ -55,7 +55,7 @@
               href="#"
               @click="() => createFriendRequest(user)"
               class="card-link"
-              >Send Friend Request</a
+              >Add</a
             >
           </div>
         </div>
@@ -68,7 +68,7 @@
       <div
         v-for="friendRequest in incommingFriendRequests"
         v-bind:key="friendRequest.id"
-        class="card"
+        class="card friend-page-card"
       >
         <div class="card-body">
           <h5 class="card-title">{{ friendRequest.senderUser.name }}</h5>
@@ -268,5 +268,11 @@ export default {
 .friendrequest-action-buttons {
   display: flex;
   justify-content: space-between;
+}
+
+.friend-page-card {
+  /* margin-bottom: 10px; */
+  border: 0px;
+  border-bottom: 1px dotted #999999;
 }
 </style>
