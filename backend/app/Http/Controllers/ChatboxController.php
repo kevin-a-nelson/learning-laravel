@@ -17,12 +17,12 @@ class ChatboxController extends Controller
         $userOneId = $request->query("userOneId");
         $userTwoId = $request->query("userTwoId");
 
-        if ($userOneId && $userTwoId) {
-            $chatBoxes->where($userOneId);
+        if ($userOneId) {
+            $chatBoxes = $chatBoxes->where("userOneId", $userOneId);
         }
 
         if ($userTwoId) {
-            $chatBoxes->where($userTwoId);
+            $chatBoxes = $chatBoxes->where("userTwoId", $userTwoId);
         }
 
         $chatBoxes = $chatBoxes->get();
@@ -38,6 +38,29 @@ class ChatboxController extends Controller
 
     public function store(Request $request)
     {
+        $userOneId = $request->userOneId;
+        $userTwoId = $request->userTwoId;
+
+        $duplicateChatbox = DB::table('chatboxes')
+            ->where("userOneId", $userOneId)
+            ->Where("userTwoId", $userTwoId);
+
+        if ($duplicateChatbox->exists()) {
+            return response()->json([
+                "message" => "Duplicate chatbox"
+            ], 404);
+        }
+
+        $reverseDuplicateChatbox = DB::table('chatboxes')
+            ->where("userOneId", $userTwoId)
+            ->Where("userTwoId", $userOneId);
+
+        if ($reverseDuplicateChatbox->exists()) {
+            return response()->json([
+                "message" => "Duplicate chatbox"
+            ], 404);
+        }
+
         $item = Chatbox::create($request->all());
         return response()->json($item, 201);
     }

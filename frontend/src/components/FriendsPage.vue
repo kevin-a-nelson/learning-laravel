@@ -200,6 +200,7 @@ export default {
       if (tab === this.ADD_FRIENDS_TAB) {
         await this.GetUsers();
         await this.getFriendRequests();
+        await this.getFriendships();
       }
 
       if (tab === this.FRIEND_REQUESTS_TAB) {
