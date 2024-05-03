@@ -65,7 +65,7 @@ class FriendshipController extends Controller
     public function destroy($id)
     {
         Friendship::destroy($id);
-        return response()->json(null, 204);
+        return response()->json([], 204);
     }
 
 }

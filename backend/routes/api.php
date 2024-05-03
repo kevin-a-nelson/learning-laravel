@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatboxController;
 use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\FriendshipController;
 use App\Models\Friendship;
@@ -36,3 +37,9 @@ Route::get('/friendships/{id}', [FriendshipController::class, 'show']);
 Route::post('/friendships', [FriendshipController::class, 'store']);
 Route::put('/friendships/{id}', [FriendshipController::class, 'update']);
 Route::delete('/friendships/{id}', [FriendshipController::class, 'destroy']);
+
+Route::get('/chatboxes', [ChatboxController::class, 'index']);
+Route::get('/chatboxes/{id}', [ChatboxController::class, 'show']);
+Route::post('/chatboxes', [ChatboxController::class, 'store']);
+Route::put('/chatboxes/{id}', [ChatboxController::class, 'update']);
+Route::delete('/chatboxes/{id}', [ChatboxController::class, 'destroy']);

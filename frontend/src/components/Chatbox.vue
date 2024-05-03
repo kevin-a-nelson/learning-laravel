@@ -4,6 +4,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "Chatbox",
   data() {
@@ -22,7 +24,36 @@ export default {
     } catch {
       this.currentUser = {};
     }
-    // await this.getFriendships();
+
+    this.chatbox = await this.getChatbox(this.currentUser.id, this.friend.id);
+
+    if (!this.chatbox) {
+      this.chatbox = await this.createChatbox(
+        this.currentUser.id,
+        this.friend.id
+      );
+    }
+  },
+
+  methods: {
+    async getChatbox(userOneId, userTwoId) {
+      let params = {
+        userOneId,
+        userTwoId,
+      };
+      await axios.get("http://localhost:8000/api/chatboxes", { params });
+    },
+
+    async createChatbox(userOneId, userTwoId) {
+      let params = {
+        userOneId,
+        userTwoId,
+      };
+      await axios
+        .post("http://localhost:8000/api/chatboxes", { params })
+        .then(() => {})
+        .catch(() => {});
+    },
   },
 };
 </script>
