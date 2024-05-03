@@ -2,37 +2,37 @@
   <div class="container col-lg-6">
     <div class="post-actions create-post-btn-container">
       <a href="#" @click="() => setCurrentTab(MY_FRIENDS_TAB)" class="card-link"
-        >My Friends</a
-      >
+        >My Friends
+      </a>
       &ensp;|&ensp;
       <a
         href="#"
         @click="() => setCurrentTab(ADD_FRIENDS_TAB)"
         class="card-link"
-        >Add Friends</a
-      >
+        >Add Friends
+      </a>
       &ensp;|&ensp;
       <a href="#" @click="setCurrentTab(FRIEND_REQUESTS_TAB)" class="card-link"
-        >Friend Requests</a
-      >
+        >Friend Requests
+      </a>
     </div>
     <div v-if="currentTab === MY_FRIENDS_TAB">
       <div v-if="formattedFriendships.length === 0">
         <p>You have no friends</p>
       </div>
       <div
-        v-for="friend in formattedFriendships"
-        v-bind:key="friend.id"
+        v-for="friendship in formattedFriendships"
+        v-bind:key="friendship.id"
         class="card"
       >
         <div class="card-body">
-          <h5 class="card-title">{{ friend.user.name }}</h5>
+          <h5 class="card-title">{{ friendship.user.name }}</h5>
           <h6 class="card-subtitle mb-2 text-muted">
-            {{ friend.user.email }}
+            {{ friendship.user.email }}
           </h6>
           <div class="friend-action-buttons">
-            <a href="#" @click="() => setCurrentTab(CHAT_BOX)">Chat</a>
-            <a href="#" @click="() => deleteFriendship(friend)">Unfriend</a>
+            <a href="#" @click="() => onChat(friendship.user)">Chat</a>
+            <a href="#" @click="() => deleteFriendship(friendship)">Unfriend</a>
           </div>
         </div>
       </div>
@@ -84,21 +84,28 @@
         </div>
       </div>
     </div>
-    <div v-if="currentTab === CHAT_BOX">Chat box</div>
+    <div v-if="currentTab === CHAT_BOX">
+      <Chatbox :friend="chatBoxFriend" />
+    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import Chatbox from "../components/Chatbox.vue";
 
 export default {
   name: "FriendsPage",
+  components: {
+    Chatbox,
+  },
   data() {
     return {
       MY_FRIENDS_TAB: 0,
       ADD_FRIENDS_TAB: 1,
       FRIEND_REQUESTS_TAB: 2,
       CHAT_BOX: 3,
+      chatBoxFriend: {},
       currentTab: 0,
       users: [],
       currentUser: {},
@@ -141,6 +148,10 @@ export default {
     },
   },
   methods: {
+    onChat(friend) {
+      this.setCurrentTab(this.CHAT_BOX);
+      this.chatBoxFriend = friend;
+    },
     userIsFriend(user) {
       return this.formattedFriendships.some((friend) => {
         return friend.user.id === user.id;
