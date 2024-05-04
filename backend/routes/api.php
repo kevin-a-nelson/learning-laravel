@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\ChatboxController;
+use App\Http\Controllers\ChatTextController;
 use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\FriendshipController;
+use App\Models\ChatText;
 use App\Models\Friendship;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -43,3 +45,9 @@ Route::get('/chatboxes/{id}', [ChatboxController::class, 'show']);
 Route::post('/chatboxes', [ChatboxController::class, 'store']);
 Route::put('/chatboxes/{id}', [ChatboxController::class, 'update']);
 Route::delete('/chatboxes/{id}', [ChatboxController::class, 'destroy']);
+
+Route::get('/chattexts', [ChatTextController::class, 'index']);
+Route::get('/chattexts/{id}', [ChatTextController::class, 'show']);
+Route::post('/chattexts', [ChatTextController::class, 'store']);
+Route::put('/chattexts/{id}', [ChatTextController::class, 'update']);
+Route::delete('/chattexts/{id}', [ChatTextController::class, 'destroy']);

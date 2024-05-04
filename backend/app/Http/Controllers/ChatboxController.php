@@ -17,13 +17,15 @@ class ChatboxController extends Controller
         $userOneId = $request->query("userOneId");
         $userTwoId = $request->query("userTwoId");
 
-        if ($userOneId) {
-            $chatBoxes = $chatBoxes->where("userOneId", $userOneId);
+        if ($userOneId && $userTwoId) {
+            $chatBoxes = DB::table('chatboxes')->where("userOneId", $userOneId)->where("userTwoId", $userTwoId);
+
+            if (!$chatBoxes->exists()) {
+                $chatBoxes = DB::table('chatboxes')->where("userOneId", $userTwoId)->where("userTwoId", $userOneId);
+            }
         }
 
-        if ($userTwoId) {
-            $chatBoxes = $chatBoxes->where("userTwoId", $userTwoId);
-        }
+        // dd($chatBoxes->get());
 
         $chatBoxes = $chatBoxes->get();
 

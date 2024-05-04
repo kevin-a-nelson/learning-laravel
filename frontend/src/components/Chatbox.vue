@@ -1,41 +1,23 @@
 <template>
   <div>
+    <h3 class="chat-title">
+      {{ friend.name }}
+    </h3>
     <div class="chat-bubble-container d-flex flex-column" id="chat-bubbles">
-      <div>
-        <p class="col-6 msg right">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
-          neque est, viverra ac rhoncus et, cursus eu leo. Quisque in tristique
-          libero, sed rhoncus neque. Ut at enim id ligula consequat tempus in
-          nec magna. Donec vitae libero eget mi malesuada rutrum. Integer ornare
-          ante at ligula venenatis, quis blandit urna euismod.
+      <div v-for="text in texts" v-bind:key="text?.id">
+        <p v-if="text.senderId === currentUser.id" class="col-6 msg right">
+          {{ text.message }}
         </p>
-      </div>
-      <div>
-        <p class="col-6 msg left">
-          Integer ornare ante at ligula venenatis, quis blandit urna euismod.
-        </p>
-      </div>
-      <div>
-        <p class="col-6 msg right">
-          Integer ornare ante at ligula venenatis, quis blandit urna euismod.
-        </p>
-      </div>
-      <div>
-        <p class="col-6 msg left">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
-          neque est, viverra ac rhoncus et, cursus eu leo. Quisque in tristique
-          libero, sed rhoncus neque. Ut at enim id ligula consequat tempus in
-          nec magna. Donec vitae libero eget mi malesuada rutrum. Integer ornare
-          ante at ligula venenatis, quis blandit urna euismod. ge
-        </p>
-      </div>
-      <div>
-        <p class="col-6 msg right">
-          Integer ornare ante at ligula venenatis, quis blandit urna euismod.
+        <p v-else class="col-6 msg left">
+          {{ text.message }}
         </p>
       </div>
     </div>
-    <input class="form-control chat-input" />
+    <input
+      v-model="newText"
+      @keyup.enter="onChatEnter"
+      class="form-control chat-input"
+    />
   </div>
 </template>
 
@@ -46,27 +28,84 @@ export default {
   name: "Chatbox",
   data() {
     return {
+      newText: "",
       currentUser: {},
       chatbox: {},
+      texts: [],
+      interval: null,
     };
   },
   props: {
     friend: Object,
   },
+  beforeUnmount() {
+    clearInterval(this.interval);
+  },
 
   async mounted() {
-    var objDiv = document.getElementById("chat-bubbles");
-    objDiv.scrollTop = objDiv.scrollHeight;
     try {
       this.currentUser = JSON.parse(localStorage["user"]);
     } catch {
       this.currentUser = {};
     }
 
-    this.chatbox = await this.getChatbox(this.currentUser.id, this.friend.id);
+    await this.getChatbox(this.currentUser?.id, this.friend?.id);
+
+    if (!this.chatbox) {
+      await this.createChatbox(this.currentUser?.id, this.friend?.id);
+    }
+
+    await this.getChatbox(this.currentUser?.id, this.friend?.id);
+
+    await this.getTexts();
+
+    var objDiv = document.getElementById("chat-bubbles");
+    objDiv.scrollTop = objDiv.scrollHeight;
+
+    this.interval = setInterval(() => {
+      this.getTexts();
+    }, 1000);
   },
 
+  created() {},
+
   methods: {
+    async onChatEnter() {
+      let text = {
+        message: this.newText,
+        chatboxId: this.chatbox?.id,
+        senderId: this.currentUser?.id,
+      };
+
+      await axios
+        .post("http://localhost:8000/api/chattexts", text)
+        .then(() => {})
+        .catch(() => {});
+
+      this.newText = "";
+
+      await this.getTexts();
+    },
+    async getTexts() {
+      let params = {
+        chatboxId: this.chatbox?.id,
+      };
+
+      var objDiv = document.getElementById("chat-bubbles");
+      let userIsScrolledToBottom =
+        objDiv.scrollHeight - objDiv.scrollTop === 600;
+
+      await axios
+        .get("http://localhost:8000/api/chattexts", { params })
+        .then((response) => {
+          this.texts = response.data;
+        })
+        .catch(() => {});
+
+      if (userIsScrolledToBottom) {
+        objDiv.scrollTop = objDiv.scrollHeight;
+      }
+    },
     async getChatbox(userOneId, userTwoId) {
       let params = {
         userOneId,
@@ -75,6 +114,7 @@ export default {
       await axios
         .get("http://localhost:8000/api/chatboxes", { params })
         .then((response) => {
+          console.log(response.data);
           this.chatbox = response.data[0];
         })
         .catch(() => {});
@@ -102,15 +142,12 @@ export default {
 }
 
 .msg.right {
-  /* background-color: #2fa4e7; */
   background-color: #c184e7;
   float: right;
   color: white;
 }
 
 .msg.left {
-  /* background-color: #593196; */
-  /* background-color: #2fa4e7; */
   background-color: #eee;
 }
 
@@ -122,7 +159,10 @@ export default {
 }
 
 .chat-bubble-container {
-  max-height: 70vh;
+  height: 600px;
   overflow: scroll;
+}
+
+.chat-title {
 }
 </style>
