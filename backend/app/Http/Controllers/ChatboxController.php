@@ -18,11 +18,9 @@ class ChatboxController extends Controller
         $userTwoId = $request->query("userTwoId");
 
         if ($userOneId && $userTwoId) {
-            $chatBoxes = DB::table('chatboxes')->where("userOneId", $userOneId)->where("userTwoId", $userTwoId);
-
-            if (!$chatBoxes->exists()) {
-                $chatBoxes = DB::table('chatboxes')->where("userOneId", $userTwoId)->where("userTwoId", $userOneId);
-            }
+            $chatBoxes = $chatBoxes
+                ->where("userOneId", $userOneId)->where("userTwoId", $userTwoId)
+                ->orWhere("userOneId", $userTwoId)->where("userTwoId", $userOneId);
         }
 
         // dd($chatBoxes->get());
