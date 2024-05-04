@@ -1,6 +1,9 @@
 <template>
   <div class="posts-container">
     <div class="container col-lg-6">
+      <div class="back-btn">
+        <RouterLink to="/">Back</RouterLink>
+      </div>
       <Post
         :post="post"
         :currentUser="currentUser"
@@ -177,5 +180,9 @@ export default {
 
 .post-actions {
   display: flex;
+}
+
+.back-btn {
+  margin-bottom: 10px;
 }
 </style>

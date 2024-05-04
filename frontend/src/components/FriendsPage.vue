@@ -1,21 +1,51 @@
 <template>
   <div class="container col-lg-6">
-    <div class="post-actions create-post-btn-container">
-      <a href="#" @click="() => setCurrentTab(MY_FRIENDS_TAB)" class="card-link"
-        >My Friends
-      </a>
-      &ensp;|&ensp;
-      <a
-        href="#"
+    <ul class="nav nav-tabs" role="tablist">
+      <li
+        class="nav-item"
+        role="presentation"
+        @click="() => setCurrentTab(MY_FRIENDS_TAB)"
+      >
+        <a
+          class="nav-link active"
+          data-bs-toggle="tab"
+          href="#home"
+          aria-selected="true"
+          role="tab"
+          >My Friends</a
+        >
+      </li>
+      <li
+        class="nav-item"
+        role="presentation"
         @click="() => setCurrentTab(ADD_FRIENDS_TAB)"
-        class="card-link"
-        >Add Friends
-      </a>
-      &ensp;|&ensp;
-      <a href="#" @click="setCurrentTab(FRIEND_REQUESTS_TAB)" class="card-link"
-        >Friend Requests
-      </a>
-    </div>
+      >
+        <a
+          class="nav-link"
+          data-bs-toggle="tab"
+          href="#profile"
+          aria-selected="false"
+          role="tab"
+          tabindex="-1"
+          >Add Friends</a
+        >
+      </li>
+      <li
+        class="nav-item"
+        role="presentation"
+        @click="setCurrentTab(FRIEND_REQUESTS_TAB)"
+      >
+        <a
+          class="nav-link"
+          data-bs-toggle="tab"
+          href="#"
+          aria-selected="false"
+          tabindex="-1"
+          role="tab"
+          >Friend Requests</a
+        >
+      </li>
+    </ul>
     <div v-if="currentTab === MY_FRIENDS_TAB">
       <div v-if="formattedFriendships.length === 0">
         <p>You have no friends</p>

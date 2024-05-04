@@ -93,7 +93,7 @@ export default {
 
       var objDiv = document.getElementById("chat-bubbles");
       let userIsScrolledToBottom =
-        objDiv.scrollHeight - objDiv.scrollTop === 600;
+        objDiv.scrollHeight - objDiv.scrollTop === 500;
 
       await axios
         .get("http://localhost:8000/api/chattexts", { params })
@@ -159,10 +159,12 @@ export default {
 }
 
 .chat-bubble-container {
-  height: 600px;
+  height: 500px;
   overflow: scroll;
 }
 
 .chat-title {
+  margin-top: 10px;
+  text-align: left;
 }
 </style>

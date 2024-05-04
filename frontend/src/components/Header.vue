@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#"> {{ title }}</a>
+      <a class="navbar-brand" href="#"> Ramp Health Social </a>
       <button
         class="navbar-toggler"
         type="button"
@@ -39,17 +39,27 @@
 </template>
 
 <script>
-// import router from "@/routes/routes";
-
 export default {
   name: "Header",
-  props: {
-    title: String,
-  },
+  props: {},
   methods: {
     logout() {
       localStorage.clear();
     },
+  },
+
+  data() {
+    return {
+      currentUser: {},
+    };
+  },
+
+  mounted() {
+    try {
+      this.currentUser = JSON.parse(localStorage["user"]);
+    } catch {
+      this.currentUser = {};
+    }
   },
   components: {},
 };
