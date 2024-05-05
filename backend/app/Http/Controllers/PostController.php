@@ -26,7 +26,7 @@ class PostController extends Controller
             "id" => $post->id,
             "title" => $post->title,
             "text" => $post->text,
-            "user" => User::where('id', $post->userId)->first(),
+            "user" => User::where('id', $post->user_id)->first(),
             "userId" => $post->userId,
             "created_at" => $post->created_at->format("m/d/Y H:i A"),
         ]);
@@ -41,8 +41,8 @@ class PostController extends Controller
             "id" => $post->id,
             "title" => $post->title,
             "text" => $post->text,
-            "user" => User::where('id', $post->userId)->first(),
-            "userId" => $post->userId
+            "user" => User::where('id', $post->user_id)->first(),
+            "userId" => $post->user_id
         ]);
     }
 
@@ -55,10 +55,13 @@ class PostController extends Controller
 
     public function create(Request $request)
     {
+        // dd('test');
+
         $post = new Post();
-        $post->userId = $request->userId;
+        $post->user_id = $request->user_id;
         $post->text = $request->text;
         $post->title = $request->title;
+
         $post->save();
 
         return response()->json([

@@ -100,7 +100,7 @@ export default {
     async createPost() {
       let url = "http://localhost:8000/api/posts";
       let newPost = {
-        userId: JSON.parse(localStorage?.user)?.id,
+        user_id: JSON.parse(localStorage?.user)?.id,
         text: this.postText,
         title: this.postTitle,
       };
