@@ -6,9 +6,17 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Services\PostService;
 
 class PostController extends Controller
 {
+
+    protected $postService;
+
+    public function __construct(PostService $postService)
+    {
+        $this->postService = $postService;
+    }
 
     public function show($id)
     {
@@ -40,26 +48,9 @@ class PostController extends Controller
 
     public function index(Request $request)
     {
-        $posts = Post::orderByDesc("created_at")->get();
+        $posts = $this->postService->index($request);
 
-        $userIdQuery = $request->query('userId');
-
-        if ($userIdQuery) {
-            $posts = $posts->where('userId', $userIdQuery);
-        }
-
-        return response()->json(
-            $posts->map(function ($post) {
-                return [
-                    "id" => $post->id,
-                    "title" => $post->title,
-                    "text" => $post->text,
-                    "user" => User::where('id', $post->userId)->first(),
-                    "userId" => $post->userId,
-                    "created_at" => $post->created_at->format("m/d/Y H:i A"),
-                ];
-            })->toArray()
-        );
+        return response()->json($posts->toArray());
     }
 
     public function create(Request $request)

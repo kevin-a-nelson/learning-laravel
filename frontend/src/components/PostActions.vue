@@ -6,7 +6,7 @@
     &ensp;|&ensp;
     <a
       href="#"
-      @click="$emit('get:posts', { userId: currentUser?.id })"
+      @click="$emit('get:posts', { user_id: currentUser?.id })"
       class="card-link"
       >My Posts</a
     >

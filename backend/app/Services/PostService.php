@@ -12,13 +12,15 @@ class PostService
     {
         $posts = Post::orderByDesc('created_at');
 
-        $userIdQuery = $request->query('userId');
+        $userIdQuery = $request->query('user_id');
 
         if ($userIdQuery) {
             $posts->where('user_id', $userIdQuery);
         }
 
         $posts = $posts->get();
+
+        // dd($posts);
 
         return PostCollection::make($posts);
     }
