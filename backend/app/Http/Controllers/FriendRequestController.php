@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\FriendRequestResource;
 use App\Models\FriendRequest;
+use App\Services\FriendRequestService;
+use App\Http\Resources\FriendRequestCollection;
 use App\Models\Friendship;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -10,82 +13,40 @@ use DB;
 
 class FriendRequestController extends Controller
 {
+
+    protected $friendRequestService;
+
+    public function __construct(FriendRequestService $friendRequestService)
+    {
+        $this->friendRequestService = $friendRequestService;
+    }
+
     public function index(Request $request)
     {
-        $userIdQuery = $request->query('userId');
-
-        $items = DB::table('friend_requests')->get();
-
-        if ($userIdQuery) {
-            $items = DB::table('friend_requests')
-                ->where('senderId', $userIdQuery)
-                ->orWhere('recipientId', $userIdQuery)
-                ->get();
-        }
-
-        return response()->json(
-            $items->map(function ($item) {
-                return [
-                    "id" => $item->id,
-                    "senderId" => $item->senderId,
-                    "recipientId" => $item->recipientId,
-                    "senderUser" => User::where('id', $item->senderId)->first(),
-                    "recipientUser" => User::where('id', $item->recipientId)->first(),
-                ];
-            })
-        );
+        $items = $this->friendRequestService->index($request);
+        return FriendRequestCollection::make($items)->toArray();
     }
 
     public function show($id)
     {
-        $item = FriendRequest::find($id);
-        return response()->json($item);
+        $item = $this->friendRequestService->show($id);
+        return new FriendRequestResource($item);
     }
 
     public function store(Request $request)
     {
-        $reverseFriendRequest = DB::table('friend_requests')
-            ->where("senderId", $request->recipientId)
-            ->where("recipientId", $request->senderId)
-            ->get();
+        $friendship = $this->friendRequestService->store($request);
 
-
-        if (!$reverseFriendRequest->isEmpty()) {
-            $friendship = Friendship::create([
-                'userOneId' => $request->senderId,
-                'userTwoId' => $request->recipientId,
-            ]);
-
-
-            FriendRequest::destroy($reverseFriendRequest[0]->id);
-            return response()->json($friendship, 201);
+        if (!$friendship) {
+            return response()->json(["message" => "A reverse friend request was found. Friendship created, and friend request's deleted."]);
         }
 
-        $duplicateFriendRequest = DB::table('friend_requests')
-            ->where("senderId", $request->senderId)
-            ->where("recipientId", $request->recipientId)
-            ->get();
-
-        if (!$duplicateFriendRequest->isEmpty()) {
-            return response()->json([
-                "message" => "Duplicate Friend Request",
-            ], 404);
-        }
-
-        $item = FriendRequest::create($request->all());
-        return response()->json($item, 201);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $item = FriendRequest::find($id);
-        $item->update($request->all());
-        return response()->json($item, 200);
+        return new FriendRequestResource($friendship);
     }
 
     public function destroy($id)
     {
-        FriendRequest::destroy($id);
-        return response()->json(["message" => "Friend Request Deleted"], 204);
+        $friendRequest = $this->friendRequestService->destroy($id);
+        return new FriendRequestResource($friendRequest);
     }
 }

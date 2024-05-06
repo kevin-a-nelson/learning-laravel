@@ -272,7 +272,7 @@ export default {
       await axios
         .get("http://localhost:8000/api/friendRequests", { params })
         .then((response) => {
-          this.friendRequests = response.data;
+          this.friendRequests = response.data.data;
         })
         .catch(() => {});
     },

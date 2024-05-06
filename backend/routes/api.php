@@ -25,7 +25,6 @@ Route::delete('comments/{id}', [App\Http\Controllers\CommentController::class, '
 Route::get('/friendRequests', [FriendRequestController::class, 'index']);
 Route::get('/friendRequests/{id}', [FriendRequestController::class, 'show']);
 Route::post('/friendRequests', [FriendRequestController::class, 'store']);
-Route::put('/friendRequests/{id}', [FriendRequestController::class, 'update']);
 Route::delete('/friendRequests/{id}', [FriendRequestController::class, 'destroy']);
 
 Route::get('/friendships', [FriendshipController::class, 'index']);
