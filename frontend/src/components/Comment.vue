@@ -31,16 +31,14 @@
 
         <div class="post-actions" v-if="currentUser?.id === comment.userId">
           <a
-            href="#"
             @click="() => $emit('update:commentBeingEdited', comment)"
-            class="card-link"
+            class="comment-action-btn card-link"
             >Edit</a
           >
           <span>&ensp;|&ensp;</span>
           <a
             @click="() => $emit('delete:comment', comment)"
-            href="#"
-            class="card-link"
+            class="comment-action-btn card-link"
             >Delete</a
           >
         </div>
@@ -80,4 +78,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.comment-action-btn {
+  cursor: pointer;
+}
+</style>

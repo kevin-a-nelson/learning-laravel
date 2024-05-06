@@ -2,45 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CommentResource;
 use Illuminate\Http\Request;
+use App\Http\Resources\CommentCollection;
 use App\Models\User;
 use App\Models\Comment;
+use App\Services\CommentService;
 
 class CommentController extends Controller
 {
+    protected $commentService;
+
+    public function __construct(CommentService $commentService)
+    {
+        $this->commentService = $commentService;
+    }
+
     public function index(Request $request)
     {
-        $comments = Comment::orderByDesc('created_at')->get();
+        $comments = $this->commentService->index($request);
 
-        $postIdQuery = $request->query('postId');
-
-        if ($postIdQuery) {
-            $comments = $comments->where('postId', $postIdQuery);
-        }
-
-        return response()->json(
-            $comments->map(function ($comment) {
-                return [
-                    "id" => $comment->id,
-                    "text" => $comment->text,
-                    "user" => User::where('id', $comment->userId)->first(),
-                    "userId" => $comment->userId,
-                    "postId" => $comment->postId,
-                    "created_at" => $comment->created_at->format('m/d/Y H:i A'),
-                ];
-            })->toArray()
-        );
+        return CommentCollection::make($comments)->toArray();
     }
 
     public function create(Request $request)
     {
-        $comment = new Comment();
-        $comment->text = $request->text;
-        $comment->userId = $request->userId;
-        $comment->postId = $request->postId;
-        $comment->save();
+        $comment = $this->commentService->create($request);
 
-        return $comment;
+        return new CommentResource($comment);
     }
 
     public function show(string $id)
@@ -55,23 +44,15 @@ class CommentController extends Controller
 
     public function update(Request $request, string $id)
     {
-        $comment = Comment::find($id);
-        $comment->update($request->all());
+        $comments = $this->commentService->update($request, $id);
 
-        return response()->json([
-            "id" => $comment->id,
-            "text" => $comment->text,
-            "user" => User::where('id', $comment->userId)->first(),
-            "userId" => $comment->userId,
-            "postId" => $comment->postId,
-            "created_at" => $comment->created_at->format('m/d/Y H:i A'),
-        ]);
-
+        return new CommentResource($comments);
     }
 
     public function destroy(string $id)
     {
-        $comment = Comment::find($id);
-        $comment->delete();
+        $comment = $this->commentService->destroy($id);
+
+        return new CommentResource($comment);
     }
 }

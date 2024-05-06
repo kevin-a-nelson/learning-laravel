@@ -6,30 +6,63 @@ use App\Models\Friendship;
 use App\Models\User;
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Collection;
 
-class FriendshipController extends Controller
+class FriendshipService
 {
     public function index(Request $request)
     {
-        $friendships = Friendship::all();
+        $friendships = DB::table('friendships');
 
         $userIdQuery = $request->query('userId');
 
         if ($userIdQuery) {
-            $friendships = DB::table('friendships')->where("userOneId", $userIdQuery)->orWhere("userTwoId", $userIdQuery)->get();
+            $friendships = $friendships->where("userOneId", $userIdQuery)->orWhere("userTwoId", $userIdQuery);
         }
 
-        return response()->json(
-            $friendships->map(function ($friendship) {
-                return [
-                    "id" => $friendship->id,
-                    "userOneId" => $friendship->userOneId,
-                    "userTwoId" => $friendship->userTwoId,
-                    "userOne" => User::where('id', $friendship->userOneId)->first(),
-                    "userTwo" => User::where('id', $friendship->userTwoId)->first()
-                ];
-            })->toArray()
-        );
+        return $friendships;
+    }
+}
+
+class FriendshipCollection extends Collection
+{
+    public static function make($items = [])
+    {
+        return new static($items);
+    }
+
+    public function toArray()
+    {
+        $itemCollection = collect($this->items);
+        return
+            [
+                "data" =>
+                    $itemCollection->map(function ($item) {
+                        return [
+                            "id" => $item->id,
+                            "userOneId" => $item->userOneId,
+                            "userTwoId" => $item->userTwoId,
+                            "userOne" => User::where('id', $item->userOneId)->first(),
+                            "userTwo" => User::where('id', $item->userTwoId)->first()
+                        ];
+                    })->toArray()
+            ];
+    }
+}
+
+class FriendshipController extends Controller
+{
+    protected $friendshipService;
+
+    public function __construct(FriendshipService $friendshipService)
+    {
+        $this->friendshipService = $friendshipService;
+    }
+
+    public function index(Request $request)
+    {
+        $friendships = $this->friendshipService->index($request);
+        return FriendshipCollection::make($friendships->get())->toArray();
     }
 
     public function show($id)

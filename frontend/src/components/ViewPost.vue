@@ -100,7 +100,7 @@ export default {
       await axios
         .get(url)
         .then((response) => {
-          this.comments = response.data;
+          this.comments = response.data.data;
         })
         .catch(() => {});
     },
