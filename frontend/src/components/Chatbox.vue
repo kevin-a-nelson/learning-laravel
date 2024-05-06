@@ -98,7 +98,7 @@ export default {
       await axios
         .get("http://localhost:8000/api/chattexts", { params })
         .then((response) => {
-          this.texts = response.data;
+          this.texts = response.data.data;
         })
         .catch(() => {});
 

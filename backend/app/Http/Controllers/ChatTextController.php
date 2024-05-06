@@ -3,49 +3,46 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChatText;
-use DB;
+use App\Services\ChatTextService;
+use App\Http\Resources\ChatTextResource;
 use Illuminate\Http\Request;
+use App\Http\Resources\ChatTextCollection;
 
 class ChatTextController extends Controller
 {
+    protected $chatTextService;
+
+    public function __construct(ChatTextService $chatTextService)
+    {
+        $this->chatTextService = $chatTextService;
+    }
     public function index(Request $request)
     {
-        $chatTexts = DB::table('chat_texts');
-
-        $chatboxId = $request->chatboxId;
-
-        if ($chatboxId) {
-            $chatTexts = $chatTexts->where('chatboxId', $chatboxId);
-        }
-
-        $chatTexts = $chatTexts->get();
-
-        return response()->json($chatTexts, 201);
+        $chatTexts = $this->chatTextService->index($request);
+        return ChatTextCollection::make($chatTexts)->toArray();
     }
 
     public function show($id)
     {
-        $item = ChatText::find($id);
-        return response()->json($item);
+        $item = $this->chatTextService->show($id);
+        return new ChatTextResource($item);
     }
 
     public function store(Request $request)
     {
-        $item = ChatText::create($request->all());
-        return response()->json($item, 201);
+        $item = $this->chatTextService->store($request);
+        return new ChatTextResource($item);
     }
 
     public function update(Request $request, $id)
     {
-        $item = ChatText::find($id);
-        $item->update($request->all());
-        return response()->json($item, 200);
+        $item = $this->chatTextService->update($request, $id);
+        return new ChatTextResource($item);
     }
 
     public function destroy($id)
     {
-        $item = ChatText::find($id);
-        $item->delete();
-        return response()->json(["message" => "Text is deleted"], 204);
+        $item = $this->chatTextService->destroy($id);
+        return new ChatTextResource($item);
     }
 }
