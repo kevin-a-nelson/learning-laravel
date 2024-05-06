@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostCollection;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Services\PostService;
+use App\Http\Resources\PostResource;
 
 class PostController extends Controller
 {
@@ -18,68 +20,34 @@ class PostController extends Controller
         $this->postService = $postService;
     }
 
+    public function index(Request $request)
+    {
+        $posts = $this->postService->index($request);
+        return PostCollection::make($posts)->toArray();
+    }
+
     public function show($id)
     {
-        $post = Post::find($id);
-
-        return response()->json([
-            "id" => $post->id,
-            "title" => $post->title,
-            "text" => $post->text,
-            "user" => User::where('id', $post->user_id)->first(),
-            "userId" => $post->userId,
-            "created_at" => $post->created_at->format("m/d/Y H:i A"),
-        ]);
+        $post = $this->postService->show($id);
+        return PostResource::make($post);
     }
 
     public function update(Request $request, $id)
     {
-        $post = Post::find($id);
-        $post->update($request->all());
-
-        return response()->json([
-            "id" => $post->id,
-            "title" => $post->title,
-            "text" => $post->text,
-            "user" => User::where('id', $post->user_id)->first(),
-            "userId" => $post->user_id
-        ]);
-    }
-
-    public function index(Request $request)
-    {
-        $posts = $this->postService->index($request);
-
-        return response()->json($posts->toArray());
+        $post = $this->postService->update($request, $id);
+        return PostResource::make($post);
     }
 
     public function create(Request $request)
     {
-        // dd('test');
-
-        $post = new Post();
-        $post->user_id = $request->user_id;
-        $post->text = $request->text;
-        $post->title = $request->title;
-
-        $post->save();
-
-        return response()->json([
-            'message' => 'Post Created Sucess',
-            'post' => $post,
-            'code' => 200
-        ]);
+        $post = $this->postService->create($request);
+        return PostResource::make($post);
     }
 
     public function destroy($id)
     {
-        $post = Post::find($id);
-        $post->delete();
-
-        return response()->json([
-            'message' => 'Post Deleted',
-            'code' => 200
-        ]);
+        $post = $this->postService->destroy($id);
+        return PostResource::make($post);
     }
 
     public function user(): BelongsTo

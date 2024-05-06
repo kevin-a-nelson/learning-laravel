@@ -51,7 +51,7 @@ export default {
       await axios
         .get(url, { params })
         .then((response) => {
-          this.posts = response.data;
+          this.posts = response.data.data;
         })
         .catch((error) => {
           console.log(error);

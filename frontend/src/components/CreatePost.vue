@@ -72,8 +72,8 @@ export default {
         .get(url)
         .then((response) => {
           if (response?.data) {
-            this.postText = response?.data?.text;
-            this.postTitle = response?.data?.title;
+            this.postText = response?.data?.data?.text;
+            this.postTitle = response?.data?.data?.title;
           }
         })
         .catch((error) => {
@@ -108,13 +108,9 @@ export default {
       await axios
         .post(url, newPost)
         .then((response) => {
-          if (response.data.code === 200) {
-            this.postText = "";
-            this.postTitle = "";
-            router.push(`/posts/${response.data.post.id}`);
-          } else {
-            this.createPostFailed = true;
-          }
+          this.postText = "";
+          this.postTitle = "";
+          router.push(`/posts/${response.data.data.id}`);
         })
         .catch((error) => {
           this.createPostFailed = true;

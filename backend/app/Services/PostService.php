@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Post;
-use App\Collections\PostCollection;
 use Illuminate\Http\Request;
 
 class PostService
@@ -18,10 +17,35 @@ class PostService
             $posts->where('user_id', $userIdQuery);
         }
 
-        $posts = $posts->get();
+        return $posts->get();
+    }
 
-        // dd($posts);
+    public function show($id)
+    {
+        return Post::findOrFail($id);
+    }
 
-        return PostCollection::make($posts);
+    public function update(Request $request, $id)
+    {
+        $post = Post::find($id);
+        $post->update($request->all());
+        return $post;
+    }
+
+    public function create(Request $request)
+    {
+        $post = new Post();
+        $post->user_id = $request->user_id;
+        $post->text = $request->text;
+        $post->title = $request->title;
+        $post->save();
+        return $post;
+    }
+
+    public function destroy($id)
+    {
+        $post = Post::find($id);
+        $post->delete();
+        return $post;
     }
 }

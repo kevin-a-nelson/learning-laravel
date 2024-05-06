@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Collections;
+namespace App\Http\Resources;
 
 use Illuminate\Support\Collection;
 
@@ -13,15 +13,18 @@ class PostCollection extends Collection
 
     public function toArray()
     {
-        return $this->map(function ($post) {
-            return [
-                'id' => $post->id,
-                'title' => $post->title,
-                'text' => $post->text,
-                'user' => $post->user, // Assuming 'user' is a relationship in Post model
-                'userId' => $post->user_id,
-                'created_at' => $post->created_at->format('m/d/Y H:i A'),
-            ];
-        })->toArray();
+        $itemCollection = collect($this->items);
+        return [
+            "data" => $itemCollection->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'title' => $item->title,
+                    'text' => $item->text,
+                    'user' => $item->user, // Assuming 'user' is a relationship in item model
+                    'userId' => $item->user_id,
+                    'created_at' => $item->created_at->format('m/d/Y H:i A'),
+                ];
+            })->toArray()
+        ];
     }
 }

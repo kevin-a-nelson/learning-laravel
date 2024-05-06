@@ -141,11 +141,11 @@ export default {
     await axios
       .get(url)
       .then((response) => {
-        this.post = response.data;
-        this.postAuthorId = response?.data?.user?.id;
-        this.postAuthor = response?.data?.user?.name;
-        this.postTitle = response?.data?.title;
-        this.postText = response?.data?.text;
+        this.post = response?.data?.data;
+        this.postAuthorId = this.post?.user?.id;
+        this.postAuthor = this.post?.user?.name;
+        this.postTitle = this.post?.title;
+        this.postText = this.post?.text;
       })
       .catch((error) => {
         console.log(error);
