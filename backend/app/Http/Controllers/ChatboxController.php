@@ -3,83 +3,48 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Models\Chatbox;
-
+use Illuminate\Support\Collection;
+use App\Services\ChatboxService;
+use App\Http\Resources\ChatboxCollection;
+use App\Http\Resources\ChatboxResource;
 use DB;
 
 class ChatboxController extends Controller
 {
+    protected $chatboxService;
+
+    public function __construct(ChatboxService $chatboxService)
+    {
+        $this->chatboxService = $chatboxService;
+    }
     public function index(Request $request)
     {
-        $chatBoxes = DB::table('chatboxes');
-
-        $userOneId = $request->query("userOneId");
-        $userTwoId = $request->query("userTwoId");
-
-        if ($userOneId && $userTwoId) {
-            $chatBoxes = $chatBoxes
-                ->where("userOneId", $userOneId)->where("userTwoId", $userTwoId)
-                ->orWhere("userOneId", $userTwoId)->where("userTwoId", $userOneId);
-        }
-
-        // dd($chatBoxes->get());
-
-        $chatBoxes = $chatBoxes->get();
-
-        return response()->json($chatBoxes);
+        $chatBoxes = $this->chatboxService->index($request);
+        return ChatboxCollection::make($chatBoxes)->toArray();
     }
 
     public function show($id)
     {
         $item = Chatbox::find($id);
-        return response()->json($item);
+        return new ChatboxResource($item);
     }
 
     public function store(Request $request)
     {
-        $userOneId = $request->userOneId;
-        $userTwoId = $request->userTwoId;
-
-        $duplicateChatbox = DB::table('chatboxes')
-            ->where("userOneId", $userOneId)
-            ->Where("userTwoId", $userTwoId);
-
-        if ($duplicateChatbox->exists()) {
-            return response()->json([
-                "message" => "Duplicate chatbox"
-            ], 404);
-        }
-
-        $reverseDuplicateChatbox = DB::table('chatboxes')
-            ->where("userOneId", $userTwoId)
-            ->Where("userTwoId", $userOneId);
-
-        if ($reverseDuplicateChatbox->exists()) {
-            return response()->json([
-                "message" => "Duplicate chatbox"
-            ], 404);
-        }
-
-        $item = Chatbox::create($request->all());
-        return response()->json($item, 201);
+        $chatbox = $this->chatboxService->store($request);
+        return new ChatboxResource($chatbox);
     }
 
     public function update(Request $request, $id)
     {
-        $item = Chatbox::find($id);
-        $item->update($request->all());
-        return response()->json($item, 200);
+        $item = $this->chatboxService->update($request, $id);
+        return new ChatboxResource($item);
     }
 
     public function destroy($id)
     {
-        $chatbox = Chatbox::find($id);
-
-        if ($chatbox) {
-            $chatbox->delete();
-        }
-
-        return response()->json(["message" => "Chatbox deleted",], 200);
+        $chatbox = $this->chatboxService->destroy($id);
+        return new ChatboxResource($chatbox);
     }
 }

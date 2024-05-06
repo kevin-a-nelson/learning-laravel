@@ -115,7 +115,7 @@ export default {
         .get("http://localhost:8000/api/chatboxes", { params })
         .then((response) => {
           console.log(response.data);
-          this.chatbox = response.data[0];
+          this.chatbox = response.data.data[0];
         })
         .catch(() => {});
     },
