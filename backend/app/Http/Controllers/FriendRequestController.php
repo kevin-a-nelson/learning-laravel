@@ -3,13 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\FriendRequestResource;
-use App\Models\FriendRequest;
 use App\Services\FriendRequestService;
 use App\Http\Resources\FriendRequestCollection;
-use App\Models\Friendship;
 use Illuminate\Http\Request;
-use App\Models\User;
-use DB;
 
 class FriendRequestController extends Controller
 {
